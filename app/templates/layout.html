@@ -1,0 +1,150 @@
+<!-- layout.html -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Nav</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap">
+</head>
+<body>
+
+<nav class="navbar">
+    <div class="navbar-brand">
+        <img src="{{ url_for('static', filename='images/logo.png') }}" alt="Logo" class="logo">
+        VANDOLF
+    </div>
+    <div class="navbar-links">
+        <a href="/">Home</a>
+        <a href="/blogs">Blogs</a>
+        <a href="/projects">Projects</a>
+        <a href="/about">About</a>
+    </div>
+</nav>
+
+
+{% block content %}
+{% endblock %}
+
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        const images = generateImagePaths("../static/images/", 20);
+        createAndAppendHexagons(images);
+
+        
+    });
+
+    function generateImagePaths(basePath, numImages) {
+        let images = [];
+        for (let i = 1; i <= numImages; i++) {
+            images.push({ base: basePath + "logo" + i, png: ".png", jpg: ".jpg" });
+        }
+        return images;
+    }
+
+    function createAndAppendHexagons(images) {
+    const container = document.getElementById("tech-stack-container");
+    let row = document.createElement("div");
+    row.style.display = 'flex';
+    row.style.justifyContent = 'center';
+
+    images.forEach((image, index) => {
+        const hexagon = document.createElement("div");
+        hexagon.className = "tech-stack-hexagons";
+        const img = document.createElement("img");
+        img.src = image.base + image.png;
+        img.onerror = function() {
+            // Check if the current src ends with '.png', then change to '.jpg'
+            if (this.src.endsWith('.png')) {
+                this.src = this.src.replace('.png', '.jpg');
+            } else {
+                // If the image still fails with '.jpg', do not try to reload.
+                console.error('Failed to load image:', this.src);
+                this.style.display = 'none'; // Optionally hide the img element
+            }
+        };
+        hexagon.appendChild(img);
+        row.appendChild(hexagon);
+
+        if ((index + 1) % 8 === 0) {
+            container.appendChild(row);
+            row = document.createElement("div");
+            row.style.display = 'flex';
+            row.style.justifyContent = 'center';
+        }
+    });
+
+    if (row.hasChildNodes()) {
+        container.appendChild(row);
+    }
+}
+
+document.addEventListener('DOMContentLoaded', function() {
+    function updateClock() {
+        var now = new Date(); // Use new Date() to generate a new Date object
+        var timeString = now.toLocaleTimeString('en-US', { timeZone: 'Asia/Manila' });
+        var dateString = now.toLocaleDateString('en-US', { timeZone: 'Asia/Manila' });
+
+        document.getElementById('time').textContent = timeString;
+        document.getElementById('date').textContent = dateString;
+    }
+
+    setInterval(updateClock, 1000); // Update the time every second
+    updateClock(); // Initial call to display the time right away
+});
+
+document.addEventListener('DOMContentLoaded', function() {
+        var modal = document.getElementById("projectModal");
+        var span = document.getElementsByClassName("close")[0];
+
+        span.onclick = function() {
+            modal.style.display = "none";
+        };
+
+        window.onclick = function(event) {
+            if (event.target == modal) {
+                modal.style.display = "none";
+            }
+        };
+
+        const buttons = document.querySelectorAll('.filter-button');
+        buttons.forEach(button => button.addEventListener('click', function() {
+            filterByCategory(button.textContent.trim());
+        }));
+    });
+
+    function openModal(projectId) {
+        const projectEntry = document.querySelector(`div[data-project-id="${projectId}"]`);
+        if (!projectEntry) {
+            console.error('Project entry not found for ID:', projectId);
+            return;
+        }
+
+        const title = projectEntry.querySelector('.project-title').textContent;
+        const description = projectEntry.querySelector('.project-summary').textContent;
+        const image = projectEntry.querySelector('.project-image').style.backgroundImage;
+
+        document.getElementById('modalTitle').textContent = title;
+        document.getElementById('modalDescription').textContent = description;
+        document.getElementById('modalImage').style.backgroundImage = image;
+
+        document.getElementById("projectModal").style.display = "block";
+    }
+
+    function filterByCategory(category) {
+        const entries = document.querySelectorAll('.project-entry');
+        entries.forEach(entry => {
+            if (entry.getAttribute('data-category') === category || category === 'All') {
+                entry.style.display = 'block';
+            } else {
+                entry.style.display = 'none';
+            }
+        });
+    }
+</script>
+
+
+</body>
+</html>

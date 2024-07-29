@@ -1,0 +1,97 @@
+{% extends "other_nav.html" %}
+
+{% block content %}
+<div class="projects-section" style="background-color: black; color: white; padding: 70px;">
+    <h1 class="section-title">Projects</h1>
+</div>
+
+<div class="container" style="color: black;">
+    <div class="project-filter">
+        <button class="filter-button" style="background-color: white; color: black; border: 1px solid black;" onclick="filterByCategory('All')">All</button>
+        {% for category in categories %}
+        <button class="filter-button" style="background-color: white; color: black; border: 1px solid black;" onclick="filterByCategory('{{ category }}')">{{ category }}</button>
+        {% endfor %}
+    </div>
+
+    <div class="project-entries">
+        {% for project in projects %}
+        <div class="project-entry" data-project-id="{{ project.id }}" data-category="{{ project.category }}" onclick="openModal('{{ project.id }}')" style="border: 1px solid gray; margin-bottom: 20px;">
+            {% if project.image %}
+            <div class="project-image" style="background-image: url('{{ url_for('static', filename='images/' + project.image) }}'); height: 200px; background-size: cover; background-position: center;">
+    
+            </div>
+            {% else %}
+            <div class="project-image" style="height: 200px; background-color: grey;">
+    
+            </div>
+            {% endif %}
+            <div class="project-content" style="padding: 20px;">
+                <h2 class="project-title">{{ project.title }}</h2>
+                <p class="project-summary">{{ project.description }}</p>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+</div>
+
+<!-- Modal -->
+<div id="projectModal" class="modal">
+    <div class="modal-content">
+        <span class="close">&times;</span>
+        <h2 id="modalTitle"></h2>
+        <p id="modalDescription"></p>
+        <div class="modal-image" id="modalImage" style="height: 200px;"></div>
+    </div>
+</div>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    var modal = document.getElementById("projectModal");
+    var span = document.getElementsByClassName("close")[0];
+    
+    span.onclick = function() {
+        modal.style.display = "none";
+    }
+    
+    window.onclick = function(event) {
+        if (event.target == modal) {
+            modal.style.display = "none";
+        }
+    }
+
+    const buttons = document.querySelectorAll('.filter-button');
+    buttons.forEach(button => button.addEventListener('click', function() {
+        filterByCategory(button.textContent.trim());
+    }));
+});
+
+function openModal(projectId) {
+    const projectEntry = document.querySelector(`div[data-project-id="${projectId}"]`);
+    if (!projectEntry) {
+        console.error('Project entry not found for ID:', projectId);
+        return;
+    }
+
+    const title = projectEntry.querySelector('.project-title').textContent;
+    const description = projectEntry.querySelector('.project-summary').textContent;
+    const image = projectEntry.querySelector('.project-image').style.backgroundImage;
+
+    document.getElementById('modalTitle').textContent = title;
+    document.getElementById('modalDescription').textContent = description;
+    document.getElementById('modalImage').style.backgroundImage = image;
+
+    document.getElementById("projectModal").style.display = "block";
+}
+
+function filterByCategory(category) {
+    const entries = document.querySelectorAll('.project-entry');
+    entries.forEach(entry => {
+        if (entry.getAttribute('data-category') === category || category === 'All') {
+            entry.style.display = 'block';
+        } else {
+            entry.style.display = 'none';
+        }
+    });
+}
+</script>
+{% endblock %}

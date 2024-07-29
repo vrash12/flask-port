@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Admin Login</title>
+    <!-- Add Bootstrap or custom CSS here -->
+</head>
+<body>
+    <div class="login-container">
+        <!-- Create your form here -->
+        <form method="post">
+            <h2>ADMIN LOGIN</h2>
+            <input type="text" name="username" placeholder="Username" required>
+            <input type="password" name="password" placeholder="Password" required>
+            <button type="submit">LOGIN</button>
+            <!-- Display error messages here -->
+            {% if error %}
+            <p class="error">{{ error }}</p>
+            {% endif %}
+        </form>
+    </div>
+</body>
+</html>

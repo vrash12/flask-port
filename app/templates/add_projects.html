@@ -1,0 +1,75 @@
+{% extends "other_nav.html" %}
+
+{% block content %}
+<div class="add-projects-section">
+    <h1 class="section-title">Add New Project</h1>
+    <form method="POST" action="{{ url_for('manage_projects') }}" enctype="multipart/form-data">
+        <!-- Security token for form submission -->
+        {{ form.hidden_tag() }}
+
+        <!-- Title Field -->
+        <div class="form-group">
+            <label for="title">Project Title:</label>
+            {{ form.title(class="form-control", id="title") }}
+            {% if form.title.errors %}
+                <ul class="errors">
+                    {% for error in form.title.errors %}
+                        <li>{{ error }}</li>
+                    {% endfor %}
+                </ul>
+            {% endif %}
+        </div>
+
+        <!-- Description Field -->
+        <div class="form-group">
+            <label for="description">Description:</label>
+            {{ form.description(class="form-control", id="description") }}
+            {% if form.description.errors %}
+                <ul class="errors">
+                    {% for error in form.description.errors %}
+                        <li>{{ error }}</li>
+                    {% endfor %}
+                </ul>
+            {% endif %}
+        </div>
+
+        <!-- Category Field -->
+        <div class="form-group">
+            <label for="category">Category:</label>
+            {{ form.category(class="form-control", id="category") }}
+            {% if form.category.errors %}
+                <ul class="errors">
+                    {% for error in form.category.errors %}
+                        <li>{{ error }}</li>
+                    {% endfor %}
+                </ul>
+            {% endif %}
+        </div>
+
+        <!-- Technologies Field -->
+        <div class="form-group">
+            <label for="technologies">Technologies:</label>
+            {{ form.technologies(class="form-control", id="technologies") }}
+            {% if form.technologies.errors %}
+                <ul class="errors">
+                    {% for error in form.technologies.errors %}
+                        <li>{{ error }}</li>
+                    {% endfor %}
+                </ul>
+            {% endif %}
+        </div>
+
+        <!-- Image URL Field -->
+        <!-- Image URL Field -->
+<div class="form-group">
+    <label for="image">Image:</label>
+    <input type="file" name="image" id="image" class="form-control">
+</div>
+
+        <!-- Submit Button -->
+        <div class="form-group">
+            <button type="submit" class="btn btn-primary">Add Project</button>
+        </div>
+    </form>
+</div>
+{% endblock %}

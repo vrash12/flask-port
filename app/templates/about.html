@@ -1,0 +1,169 @@
+{% extends "layout.html" %}
+
+{% block content %}
+<div class="about-section">
+    <h1 class="about-title">About</h1>
+</div>
+
+<p class="about-h1">Hello, I’m a Self-taught technologist specializing in software development, data science, network administration, and cybersecurity.</p>
+<hr class="about-line">
+
+<div class="rectangle-and-hexagon">
+    <div class="hexagon">
+        <div class="inner-hexagon">
+            <div class="inner-hexagon-one" style="--bg-image: url({{ url_for('static', filename='images/ako.png') }});">
+            </div>
+        </div>
+    </div>
+    <div class="rectangle">
+        <div class="rectangle-content">
+            <h2>Summary</h2>
+            <p>I am a passionate software developer, data scientist, network administrator, and cybersecurity specialist with experience in a variety of technologies. I have worked on numerous projects, including web applications, data analysis tools, machine learning models, network management systems, and cybersecurity implementations.</p>
+            <h2>Skills</h2>
+            <div class="collapsible-section">
+                <button class="collapsible">Programming Languages</button>
+                <div class="collapsible-content">
+                    <ul>
+                        <li>Python <div class="skill-bar"><div class="skill-level" style="width: 90%;"></div></div></li>
+                        <li>JavaScript <div class="skill-bar"><div class="skill-level" style="width: 80%;"></div></div></li>
+                        <li>C++ <div class="skill-bar"><div class="skill-level" style="width: 70%;"></div></div></li>
+                    </ul>
+                </div>
+            </div>
+            <div class="collapsible-section">
+                <button class="collapsible">Web Development</button>
+                <div class="collapsible-content">
+                    <ul>
+                        <li>HTML <div class="skill-bar"><div class="skill-level" style="width: 95%;"></div></div></li>
+                        <li>CSS <div class="skill-bar"><div class="skill-level" style="width: 90%;"></div></div></li>
+                        <li>Django <div class="skill-bar"><div class="skill-level" style="width: 85%;"></div></div></li>
+                        <li>Flask <div class="skill-bar"><div class="skill-level" style="width: 85%;"></div></div></li>
+                    </ul>
+                </div>
+            </div>
+            <div class="collapsible-section">
+                <button class="collapsible">Data Science</button>
+                <div class="collapsible-content">
+                    <ul>
+                        <li>Pandas <div class="skill-bar"><div class="skill-level" style="width: 90%;"></div></div></li>
+                        <li>NumPy <div class="skill-bar"><div class="skill-level" style="width: 85%;"></div></div></li>
+                        <li>Scikit-learn <div class="skill-bar"><div class="skill-level" style="width: 80%;"></div></div></li>
+                    </ul>
+                </div>
+            </div>
+            <div class="collapsible-section">
+                <button class="collapsible">Networking Skills</button>
+                <div class="collapsible-content">
+                    <ul>
+                        <li>Network Configuration <div class="skill-bar"><div class="skill-level" style="width: 75%;"></div></div></li>
+                        <li>Network Security <div class="skill-bar"><div class="skill-level" style="width: 80%;"></div></div></li>
+                        <li>Routing and Switching <div class="skill-bar"><div class="skill-level" style="width: 70%;"></div></div></li>
+                        <li>Wireless Networking <div class="skill-bar"><div class="skill-level" style="width: 65%;"></div></div></li>
+                        <li>TCP/IP Protocol Suite <div class="skill-bar"><div class="skill-level" style="width: 85%;"></div></div></li>
+                    </ul>
+                </div>
+            </div>
+            <div class="collapsible-section">
+                <button class="collapsible">Cybersecurity Skills</button>
+                <div class="collapsible-content">
+                    <ul>
+                        <li>Firewall Configuration <div class="skill-bar"><div class="skill-level" style="width: 85%;"></div></div></li>
+                        <li>Intrusion Detection Systems (IDS) <div class="skill-bar"><div class="skill-level" style="width: 80%;"></div></div></li>
+                        <li>Encryption and Decryption <div class="skill-bar"><div class="skill-level" style="width: 90%;"></div></div></li>
+                        <li>Security Information and Event Management (SIEM) <div class="skill-bar"><div class="skill-level" style="width: 75%;"></div></div></li>
+                        <li>Vulnerability Assessment <div class="skill-bar"><div class="skill-level" style="width: 80%;"></div></div></li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<h1 class="tech-stack-title">Technology Stack</h1>
+<div class="social-stacks">
+    <div id="tech-stack-container" class="tech-stack-container"></div>
+</div>
+
+
+
+<script>
+    document.querySelectorAll('.collapsible').forEach(button => {
+        button.addEventListener('click', function() {
+            this.classList.toggle('active');
+            const content = this.nextElementSibling;
+            if (content.style.maxHeight) {
+                content.style.maxHeight = null;
+            } else {
+                content.style.maxHeight = content.scrollHeight + 'px';
+            }
+        });
+    });
+
+    // Interactive Network and Cybersecurity Diagram
+    const svg = document.getElementById('network-diagram');
+    const details = document.getElementById('network-details');
+
+    // Sample data for the network diagram
+    const nodes = [
+        { id: 1, cx: 100, cy: 200, label: 'Router', details: 'This is a high-performance router.' },
+        { id: 2, cx: 300, cy: 100, label: 'Switch', details: 'This switch connects multiple devices.' },
+        { id: 3, cx: 300, cy: 300, label: 'Firewall', details: 'This firewall protects the network from threats.' },
+        { id: 4, cx: 500, cy: 100, label: 'Server', details: 'This server hosts multiple applications.' },
+        { id: 5, cx: 500, cy: 300, label: 'Access Point', details: 'This access point provides wireless connectivity.' },
+        { id: 6, cx: 700, cy: 200, label: 'IDS', details: 'This Intrusion Detection System monitors and analyzes network traffic for signs of intrusion.' }
+    ];
+
+    const links = [
+        { source: 1, target: 2 },
+        { source: 1, target: 3 },
+        { source: 2, target: 4 },
+        { source: 3, target: 5 },
+        { source: 2, target: 6 }
+    ];
+
+    // Draw links
+    links.forEach(link => {
+        const sourceNode = nodes.find(node => node.id === link.source);
+        const targetNode = nodes.find(node => node.id === link.target);
+        const line = document.createElementNS('http://www.w3.org/2000/svg', 'line');
+        line.setAttribute('x1', sourceNode.cx);
+        line.setAttribute('y1', sourceNode.cy);
+        line.setAttribute('x2', targetNode.cx);
+        line.setAttribute('y2', targetNode.cy);
+        line.setAttribute('stroke', 'black');
+        line.setAttribute('stroke-width', '2');
+        svg.appendChild(line);
+    });
+
+    // Draw nodes
+    nodes.forEach(node => {
+        const circle = document.createElementNS('http://www.w3.org/2000/svg', 'circle');
+        circle.setAttribute('cx', node.cx);
+        circle.setAttribute('cy', node.cy);
+        circle.setAttribute('r', '20');
+        circle.setAttribute('fill', 'white');
+        circle.setAttribute('stroke', 'black');
+        circle.setAttribute('stroke-width', '2');
+        svg.appendChild(circle);
+
+        const text = document.createElementNS('http://www.w3.org/2000/svg', 'text');
+        text.setAttribute('x', node.cx);
+        text.setAttribute('y', node.cy);
+        text.setAttribute('dy', '.35em');
+        text.setAttribute('text-anchor', 'middle');
+        text.setAttribute('font-size', '12');
+        text.setAttribute('fill', 'black');
+        text.textContent = node.label;
+        svg.appendChild(text);
+
+        // Add hover interaction
+        circle.addEventListener('mouseover', () => {
+            details.textContent = node.details;
+            details.style.display = 'block';
+        });
+        circle.addEventListener('mouseout', () => {
+            details.style.display = 'none';
+        });
+    });
+</script>
+{% endblock %}

@@ -1,0 +1,47 @@
+{% extends "other_nav.html" %}
+
+{% block content %}
+
+<!-- Blogs Section -->
+<div class="blogs-section">
+    <h1 class="section-title">Blogs</h1>
+</div>
+
+<div class="container">
+    <!-- Section Title -->
+
+    <div class="tag-filter">
+        {% for tag in unique_tags %}
+        <button class="tag-button" onclick="filterByTag('{{ tag }}')">{{ tag }}</button>
+        {% endfor %}
+    </div>
+
+    <div id="pagination-controls" class="pagination">
+        <!-- Pagination buttons will be loaded here -->
+    </div>
+
+    <div class="blog-entries">
+        <!-- Blog Entries -->
+        {% for entry in entries %}
+        <div class="blog-entry">
+            {% if entry.image %}
+            <img src="{{ url_for('static', filename='images/' + entry.image) }}" alt="Blog Image" class="blog-image">
+            {% endif %}
+            <div class="blog-content">
+                <div class="blog-tags">
+                    <!-- Tags go here -->
+                    {% for tag in entry.tags.split(',') %}
+                    <span class="tag">{{ tag }}</span>
+                    {% endfor %}
+                </div>
+                <h2 class="blog-title">{{ entry.title }}</h2>
+                <p class="blog-summary">{{ entry.description }}</p>
+                <a href="{{ url_for('blog_entry', entry_id=entry.id) }}" class="read-more">see more</a>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+    
+</div>
+
+{% endblock %}

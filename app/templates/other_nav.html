@@ -1,0 +1,117 @@
+<!-- layout.html -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Nav</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+<body>
+
+<nav class="navbar-other">
+    <div class="navbar-brand-other">
+        <img src="{{ url_for('static', filename='images/logo.png') }}" alt="Logo" class="logo-other">
+        VANDOLF
+    </div>
+    <div class="navbar-links-other">
+        <a href="/">Home</a>
+        <a href="/blogs">Blogs</a>
+        <a href="/projects">Projects</a>
+        <a href="/about">About</a>
+    </div>
+</nav>
+
+
+{% block content %}
+{% endblock %}
+
+<script>
+    let currentPage = 1;  // Tracks the current page
+    
+    function filterByTag(tag, page = 1) {
+        currentPage = page;  // Update current page
+        fetch(`/filter-blogs?tag=${tag}&page=${page}`)
+            .then(response => response.json())
+            .then(data => {
+                document.getElementById('blog-entries-container').innerHTML = data.html;
+                updatePaginationControls(tag);
+            });
+    }
+    
+    function updatePaginationControls(tag) {
+        // This function updates the pagination controls
+        // For simplicity, this example only shows a 'Next' button
+        let paginationHtml = `<button onclick="filterByTag('${tag}', ${currentPage + 1})">Next</button>`;
+        document.getElementById('pagination-controls').innerHTML = paginationHtml;
+    }
+    
+    function loadMoreBlogs() {
+        filterByTag(currentTag, currentPage + 1);
+    }
+    
+    // Assuming you have a global variable to track the current tag
+    let currentTag = '';
+
+    function fetchSummary(entryId) {
+    fetch('/summarize/' + entryId)
+        .then(response => response.json())
+        .then(data => {
+            if(data.error) {
+                alert('Summary could not be generated: ' + data.error);
+            } else {
+                document.getElementById('summary-content').textContent = data.summary;
+                document.getElementById('summary-container').style.display = 'block';
+            }
+        })
+        .catch(error => alert('Error fetching summary: ' + error));
+
+        document.addEventListener('DOMContentLoaded', function() {
+    var modal = document.getElementById("projectModal");
+    var span = document.getElementsByClassName("close")[0];
+
+    span.onclick = function() {
+        modal.style.display = "none";
+    }
+
+    window.onclick = function(event) {
+        if (event.target == modal) {
+            modal.style.display = "none";
+        }
+    }
+});
+
+document.addEventListener('DOMContentLoaded', function() {
+    var modal = document.getElementById("projectModal");
+    var span = document.getElementsByClassName("close")[0];
+
+    span.onclick = function() {
+        modal.style.display = "none";
+    }
+
+    window.onclick = function(event) {
+        if (event.target == modal) {
+            modal.style.display = "none";
+        }
+    }
+});
+
+function openModal(projectId) {
+    const projectEntry = document.querySelector(`[data-project-id="${projectId}"]`);
+    const title = projectEntry.querySelector('.project-title').textContent;
+    const description = projectEntry.querySelector('.project-summary').textContent;
+    const image = projectEntry.querySelector('.project-image').style.backgroundImage;
+
+    document.getElementById('modalTitle').textContent = title;
+    document.getElementById('modalDescription').textContent = description;
+    document.getElementById('modalImage').style.backgroundImage = image;
+
+    document.getElementById("projectModal").style.display = "block";
+}
+}
+    </script>
+    
+
+
+</body>
+</html>

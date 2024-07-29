@@ -1,0 +1,103 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Dashboard</title>
+    <style>
+        /* Basic reset */
+        body, h1, ul, li, a, button {
+            margin: 0;
+            padding: 0;
+            border: 0;
+            font-size: 100%;
+            font-family: 'Inter', sans-serif;
+            vertical-align: baseline;
+        }
+        /* Container for the sidebar */
+        .sidebar {
+            height: 100vh;
+            width: 150px; /* Adjust the width as necessary */
+            background-color: #000;
+            color: #fff;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+        /* Logo at the top */
+        .sidebar .logo {
+            margin-top: 20px;
+            margin-bottom: 20px;
+        }
+        /* Styling for the navbar items */
+        .sidebar nav {
+            width: 100%;
+        }
+        .sidebar nav ul {
+            list-style: none;
+        }
+        .sidebar nav ul li {
+            width: 100%;
+            text-align: center;
+            padding: 10px 0;
+        }
+        /* Styling for links */
+        .sidebar nav ul li a {
+            color: #b40f0f;
+            text-decoration: none;
+            display: block;
+            transition: background-color 0.3s;
+        }
+
+        .sidebar nav ul li a, .sidebar nav ul li a:-webkit-any-link {
+    color: #fff; /* This will set the color to white */
+    text-decoration: none; /* This removes the underline */
+    /* Add other styles as needed */
+}
+
+        .sidebar nav ul li a:hover {
+            background-color: #333;
+        }
+        /* Styling for icons (assuming you use Font Awesome or similar) */
+        .sidebar nav ul li i {
+            margin-right: 8px;
+        }
+        /* Logout button at the bottom */
+        .sidebar .logout {
+            margin-top: auto;
+            margin-bottom: 20px;
+        }
+
+        .sidebar .logout a {
+    color: #ffffff; /* Change this to your desired color */
+}
+    </style>
+</head>
+<body>
+
+
+    <nav class="sidebar">
+        <!-- Logo placeholder -->
+        <div class="logo">
+            <img src="{{ url_for('static', filename='images/DARK.png') }}" alt="Logo">
+        </div>
+    
+<ul>
+    <li><a href="{{ url_for('admin_dashboard') }}"><i class="bi bi-house"></i> Dashboard</a></li>
+    <li><a href="{{ url_for('create_or_edit_post') }}"><i class="bi bi-plus-circle"></i> Create Post</a></li>
+    <li><a href="{{ url_for('manage') }}"><i class="bi bi-gear"></i> Manage Posts</a></li>
+    <li><a href="{{ url_for('logout') }}"><i class="bi bi-box-arrow-right"></i> Logout</a></li>
+</ul>
+
+        <!-- Logout button -->
+        <div class="logout">
+            <a href="{{ url_for('logout') }}"><i class="bi bi-door-open-fill"></i> Logout</a>
+        </div>
+    </nav>
+    
+
+</body>
+</html>
+
+

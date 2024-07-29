@@ -1,0 +1,21 @@
+{% extends "other_nav.html" %}
+
+{% block content %}
+<div class="top-container" style="background-image: url('{{ url_for('static', filename='images/' + entry.image) if entry.image else url_for('static', filename='images/default.jpg') }}');">
+    <h1>{{ entry.title }}</h1>
+    <p>Published date: {{ entry.created_at.strftime('%B %d, %Y') }}</p>
+</div>
+
+<div class="content-container">
+    <h2>{{ entry.description }}</h2>
+    <div class="blog-body">
+        {{ entry.body|safe }}
+    </div>
+    <button onclick="fetchSummary({{ entry.id }})">Summarize</button>
+    <div id="summary-container" style="display: none;">
+        <h3>Summary</h3>
+        <p id="summary-content"></p>
+    </div>
+</div>
+
+{% endblock %}

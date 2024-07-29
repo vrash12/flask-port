@@ -1,0 +1,9 @@
+{% extends "admin_nav.html" %}
+
+{% block content %}
+<div class="container mt-5">
+    <h1>Admin Dashboard</h1>
+    <a href="{{ url_for('create_or_edit_post') }}" class="btn btn-primary">Create New Post</a>
+    <!-- Add other admin dashboard content here -->
+</div>
+{% endblock %}
