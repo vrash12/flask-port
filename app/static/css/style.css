@@ -251,7 +251,7 @@ html {
 
 .overlay-section img {
     width: 100%;
-    height: 100%;
+    height: 60%;
     object-fit: cover;
 }
 
@@ -318,11 +318,9 @@ html {
     color: #fff;
 }
 
-.section-title {
-    text-align: left;
-    margin-bottom: -34px;
-    font-size: 5em;
-}
+
+
+
 
 
 
@@ -1044,6 +1042,10 @@ html {
     text-align: left;
 }
 
+.sampl {
+    font-size: 2em;
+    text-align: left;
+}
 .project-entries {
     display: flex;
     flex-wrap: wrap;

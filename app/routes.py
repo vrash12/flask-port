@@ -1,16 +1,15 @@
-from flask import render_template, request, redirect, url_for, flash, session, jsonify
+from flask import render_template, request, redirect, url_for, flash, session, jsonify, abort
 from werkzeug.security import check_password_hash, generate_password_hash
 from . import db
-from .models import *
-from .forms import *
+from .models import BlogPost, Project
+from .forms import BlogPostForm, ProjectForm
 import logging
 import os
 from werkzeug.utils import secure_filename
-from transformers import pipeline
 from .summarizer import summarize_text
 
 def init_routes(app):
-    app.secret_key = 'admin'
+    app.secret_key = os.environ.get('SECRET_KEY', 'mysecret')
     app.config['UPLOAD_FOLDER'] = 'app/static/images'
 
     @app.route('/')
@@ -52,7 +51,7 @@ def init_routes(app):
         if request.method == 'POST':
             username = request.form['username']
             password = request.form['password']
-            if username == 'admin' and password == 'admin':  # This is just for demonstration
+            if username == os.environ.get('ADMIN_USERNAME') and password == os.environ.get('ADMIN_PASSWORD'):
                 session['logged_in'] = True
                 return redirect(url_for('admin_dashboard'))
             else:
@@ -139,6 +138,7 @@ def init_routes(app):
         except Exception as e:
             logging.error(f'Error fetching blog entries: {e}')
             entries = []
+        return render_template('blog.html', entries=entries)
 
     @app.route('/blog-post/<int:post_id>')
     def blog_post(post_id):

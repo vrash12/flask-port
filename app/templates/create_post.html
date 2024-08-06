@@ -1,117 +1,109 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>{{ title }}</title>
-    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
-    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
-</head>
-<body>
-    <div class="container mt-5">
-        <div class="card">
-            <div class="card-body">
-                <h3 class="card-title text-center">{{ title }}</h3>
-                <form method="POST" enctype="multipart/form-data" class="needs-validation" novalidate>
-                    {{ form.hidden_tag() }}
+{% extends "admin_nav.html" %}
 
-                    <div class="form-group">
-                        <label for="title">Title</label>
-                        {{ form.title(class="form-control", id="title", placeholder="Enter title") }}
-                    </div>
+{% block title %}{{ title }}{% endblock %}
 
-                    <div class="form-group">
-                        <label for="description">Description</label>
-                        {{ form.description(class="form-control", id="description", placeholder="Enter description") }}
-                    </div>
+{% block content %}
+<div class="container mt-5">
+    <div class="card">
+        <div class="card-body">
+            <h3 class="card-title text-center">{{ title }}</h3>
+            <form method="POST" enctype="multipart/form-data" class="needs-validation" novalidate>
+                {{ form.hidden_tag() }}
 
-                    <div class="form-group">
-                        <label for="tags">Tags</label>
-                        <div id="tags-container">
-                            {% if post %}
-                                {% for tag in post.tags.split(',') %}
-                                    <div class="input-group mb-2">
-                                        <input type="text" name="tags[]" class="form-control" value="{{ tag.strip() }}" placeholder="Enter tag">
-                                        <div class="input-group-append">
-                                            <button class="btn btn-outline-danger" type="button" onclick="removeTag(this)">Remove</button>
-                                        </div>
-                                    </div>
-                                {% endfor %}
-                            {% else %}
+                <div class="form-group">
+                    <label for="title">Title</label>
+                    {{ form.title(class="form-control", id="title", placeholder="Enter title") }}
+                </div>
+
+                <div class="form-group">
+                    <label for="description">Description</label>
+                    {{ form.description(class="form-control", id="description", placeholder="Enter description") }}
+                </div>
+
+                <div class="form-group">
+                    <label for="tags">Tags</label>
+                    <div id="tags-container">
+                        {% if post %}
+                            {% for tag in post.tags.split(',') %}
                                 <div class="input-group mb-2">
-                                    <input type="text" name="tags[]" class="form-control" placeholder="Enter tag">
+                                    <input type="text" name="tags[]" class="form-control" value="{{ tag.strip() }}" placeholder="Enter tag">
                                     <div class="input-group-append">
-                                        <button class="btn btn-outline-secondary" type="button" id="add-tag-btn">Add Tag</button>
+                                        <button class="btn btn-outline-danger" type="button" onclick="removeTag(this)">Remove</button>
                                     </div>
                                 </div>
-                            {% endif %}
-                        </div>
+                            {% endfor %}
+                        {% else %}
+                            <div class="input-group mb-2">
+                                <input type="text" name="tags[]" class="form-control" placeholder="Enter tag">
+                                <div class="input-group-append">
+                                    <button class="btn btn-outline-secondary" type="button" id="add-tag-btn">Add Tag</button>
+                                </div>
+                            </div>
+                        {% endif %}
+                    </div>
+                    <small class="form-text text-muted">
+                        Add comma-separated tags, e.g., AI, Machine Learning, Data Science.
+                    </small>
+                </div>
+
+                <div class="form-group">
+                    <label for="body">Body</label>
+                    {{ form.body(class="form-control", id="body", placeholder="Enter post content") }}
+                </div>
+
+                <div class="form-group">
+                    <label for="image">Upload Cover</label>
+                    <div class="custom-file">
+                        <input type="file" class="custom-file-input" id="image" name="image" accept="image/*">
+                        <label class="custom-file-label" for="image">Choose file...</label>
                         <small class="form-text text-muted">
-                            Add comma-separated tags, e.g., AI, Machine Learning, Data Science.
+                            Supported types: JPEG, PNG, GIF, SVG. Max 10MB.
                         </small>
                     </div>
+                </div>
 
-                    <div class="form-group">
-                        <label for="body">Body</label>
-                        {{ form.body(class="form-control", id="body", placeholder="Enter post content") }}
+                <div class="form-row">
+                    <div class="col">
+                        <button type="submit" class="btn btn-primary btn-block">{{ 'Update' if post else 'Publish' }}</button>
                     </div>
-
-                    <div class="form-group">
-                        <label for="image">Upload Cover</label>
-                        <div class="custom-file">
-                            <input type="file" class="custom-file-input" id="image" name="image" accept="image/*">
-                            <label class="custom-file-label" for="image">Choose file...</label>
-                            <small class="form-text text-muted">
-                                Supported types: JPEG, PNG, GIF, SVG. Max 10MB.
-                            </small>
-                        </div>
+                    <div class="col">
+                        <button type="reset" class="btn btn-secondary btn-block">Clear</button>
                     </div>
-
-                    <div class="form-row">
-                        <div class="col">
-                            <button type="submit" class="btn btn-primary btn-block">{{ 'Update' if post else 'Publish' }}</button>
-                        </div>
-                        <div class="col">
-                            <button type="reset" class="btn btn-secondary btn-block">Clear</button>
-                        </div>
-                    </div>
-                </form>
-            </div>
+                </div>
+            </form>
         </div>
     </div>
+</div>
 
-    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/popper.js@1.9.2/dist/umd/popper.min.js"></script>
-    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+<script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/popper.js@1.9.2/dist/umd/popper.min.js"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
 
-    {% block scripts %}
-    <script>
-        document.addEventListener('DOMContentLoaded', function () {
-            var tagsContainer = document.getElementById('tags-container');
-            var addTagButton = document.getElementById('add-tag-btn');
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        var tagsContainer = document.getElementById('tags-container');
+        var addTagButton = document.getElementById('add-tag-btn');
 
-            if (addTagButton) {
-                addTagButton.addEventListener('click', function () {
-                    var newInputGroup = document.createElement('div');
-                    newInputGroup.classList.add('input-group', 'mb-2');
+        if (addTagButton) {
+            addTagButton.addEventListener('click', function () {
+                var newInputGroup = document.createElement('div');
+                newInputGroup.classList.add('input-group', 'mb-2');
 
-                    newInputGroup.innerHTML = `
-                        <input type="text" name="tags[]" class="form-control" placeholder="Enter tag">
-                        <div class="input-group-append">
-                            <button class="btn btn-outline-danger" type="button" onclick="removeTag(this)">Remove</button>
-                        </div>
-                    `;
+                newInputGroup.innerHTML = `
+                    <input type="text" name="tags[]" class="form-control" placeholder="Enter tag">
+                    <div class="input-group-append">
+                        <button class="btn btn-outline-danger" type="button" onclick="removeTag(this)">Remove</button>
+                    </div>
+                `;
 
-                    tagsContainer.appendChild(newInputGroup);
-                });
-            }
-        });
-
-        function removeTag(btn) {
-            var inputGroup = btn.closest('.input-group');
-            inputGroup.remove();
+                tagsContainer.appendChild(newInputGroup);
+            });
         }
-    </script>
-    {% endblock %}
-</body>
-</html>
+    });
+
+    function removeTag(btn) {
+        var inputGroup = btn.closest('.input-group');
+        inputGroup.remove();
+    }
+</script>
+{% endblock %}
