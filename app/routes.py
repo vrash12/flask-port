@@ -6,7 +6,7 @@ from .forms import BlogPostForm, ProjectForm
 import logging
 import os
 from werkzeug.utils import secure_filename
-from .summarizer import summarize_text
+
 
 def init_routes(app):
     app.secret_key = os.environ.get('SECRET_KEY', 'mysecret')
@@ -33,14 +33,7 @@ def init_routes(app):
             abort(404, description="Resource not found")
         return render_template('blog_entry.html', entry=entry)
 
-    @app.route('/summarize/<int:entry_id>')
-    def summarize(entry_id):
-        entry = BlogPost.get_blog_entry(entry_id)
-        if not entry:
-            return jsonify({'error': 'Post not found'}), 404
 
-        summary = summarize_text(entry.body)
-        return jsonify({'summary': summary})
 
     @app.route('/about')
     def about():

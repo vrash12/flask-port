@@ -11,11 +11,6 @@
     <div class="blog-body">
         {{ entry.body|safe }}
     </div>
-    <button onclick="fetchSummary({{ entry.id }})">Summarize</button>
-    <div id="summary-container" style="display: none;">
-        <h3>Summary</h3>
-        <p id="summary-content"></p>
-    </div>
 </div>
 
 {% endblock %}
