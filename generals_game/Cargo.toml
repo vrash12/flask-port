@@ -1,0 +1,13 @@
+[package]
+name = "generals_game"      # The name of your Rust package
+version = "0.1.0"           # Version of your package
+edition = "2018"            # Rust edition you're using
+
+[dependencies]
+wasm-bindgen = "0.2"        # wasm-bindgen to bind Rust functions to JavaScript
+
+[lib]
+crate-type = ["cdylib"]     # This will produce a shared library compatible with WebAssembly
+
+[profile.release]
+lto = true                  # Link-time optimization for smaller WebAssembly files

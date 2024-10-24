@@ -1,4 +1,3 @@
-<!-- layout.html -->
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -8,6 +7,7 @@
     <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
     <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap">
+    {% block head %}{% endblock %}
 </head>
 <body>
 
@@ -24,16 +24,85 @@
     </div>
 </nav>
 
-
 {% block content %}
 {% endblock %}
 
 <script>
+    // Game-related JavaScript
+    document.addEventListener('DOMContentLoaded', function() {
+        let pieces = [];
+        let selectedPiece = null;
+        let currentPlayer = "Player 1";
+
+        async function startGame() {
+            // Initialize game logic
+            await init();
+            pieces = initialize_pieces();
+            renderBoard();
+            document.getElementById("game-log").textContent = "Game started!";
+        }
+
+        function playWithFriend() {
+            startGame();
+            currentPlayer = "Player 1";  // Reset turn system
+            document.getElementById("game-log").textContent = `Play with Friends started! ${currentPlayer}'s turn`;
+        }
+
+        function renderBoard() {
+            for (let i = 1; i <= 15; i++) {
+                const cell = document.getElementById("cell-" + i);
+                cell.textContent = '';
+                cell.classList.remove('selected');
+            }
+
+            pieces.forEach(piece => {
+                const position = piece.get_position();
+                const name = piece.get_name();
+                document.getElementById("cell-" + position).textContent = name;
+            });
+        }
+
+        function handleCellClick(position) {
+            const piece = pieces.find(p => p.get_position() === position);
+
+            if (piece && !selectedPiece) {
+                selectedPiece = piece;
+                const cell = document.getElementById("cell-" + position);
+                cell.classList.add('selected');
+                document.getElementById("game-log").textContent = `Selected: ${piece.get_name()} (${currentPlayer})`;
+            } else if (selectedPiece) {
+                if (selectedPiece.is_move_valid(position)) {
+                    selectedPiece.move_to(position);
+                    document.getElementById("game-log").textContent = `${currentPlayer} moved: ${selectedPiece.get_name()} to position ${position}`;
+                    selectedPiece = null;
+                    togglePlayer();
+                    renderBoard();
+                } else {
+                    document.getElementById("game-log").textContent = "Invalid move!";
+                }
+            }
+        }
+
+        function togglePlayer() {
+            currentPlayer = currentPlayer === "Player 1" ? "Player 2" : "Player 1";
+            document.getElementById("game-log").textContent += `\nNow it's ${currentPlayer}'s turn`;
+        }
+
+        function resetGame() {
+            startGame();
+            document.getElementById("game-log").textContent = "Game reset!";
+        }
+
+        // Initialize game on page load
+        startGame();
+    });
+
+    // Other existing scripts (like hexagons, modals, clock, etc.)
     document.addEventListener('DOMContentLoaded', function() {
         const images = generateImagePaths("../static/images/", 20);
         createAndAppendHexagons(images);
-
         
+        // Add any other functionality as needed for the site
     });
 
     function generateImagePaths(basePath, numImages) {
@@ -45,57 +114,57 @@
     }
 
     function createAndAppendHexagons(images) {
-    const container = document.getElementById("tech-stack-container");
-    let row = document.createElement("div");
-    row.style.display = 'flex';
-    row.style.justifyContent = 'center';
+        const container = document.getElementById("tech-stack-container");
+        let row = document.createElement("div");
+        row.style.display = 'flex';
+        row.style.justifyContent = 'center';
 
-    images.forEach((image, index) => {
-        const hexagon = document.createElement("div");
-        hexagon.className = "tech-stack-hexagons";
-        const img = document.createElement("img");
-        img.src = image.base + image.png;
-        img.onerror = function() {
-            // Check if the current src ends with '.png', then change to '.jpg'
-            if (this.src.endsWith('.png')) {
-                this.src = this.src.replace('.png', '.jpg');
-            } else {
-                // If the image still fails with '.jpg', do not try to reload.
-                console.error('Failed to load image:', this.src);
-                this.style.display = 'none'; // Optionally hide the img element
+        images.forEach((image, index) => {
+            const hexagon = document.createElement("div");
+            hexagon.className = "tech-stack-hexagons";
+            const img = document.createElement("img");
+            img.src = image.base + image.png;
+            img.onerror = function() {
+                if (this.src.endsWith('.png')) {
+                    this.src = this.src.replace('.png', '.jpg');
+                } else {
+                    console.error('Failed to load image:', this.src);
+                    this.style.display = 'none';
+                }
+            };
+            hexagon.appendChild(img);
+            row.appendChild(hexagon);
+
+            if ((index + 1) % 8 === 0) {
+                container.appendChild(row);
+                row = document.createElement("div");
+                row.style.display = 'flex';
+                row.style.justifyContent = 'center';
             }
-        };
-        hexagon.appendChild(img);
-        row.appendChild(hexagon);
+        });
 
-        if ((index + 1) % 8 === 0) {
+        if (row.hasChildNodes()) {
             container.appendChild(row);
-            row = document.createElement("div");
-            row.style.display = 'flex';
-            row.style.justifyContent = 'center';
         }
+    }
+
+    // Time update
+    document.addEventListener('DOMContentLoaded', function() {
+        function updateClock() {
+            var now = new Date();
+            var timeString = now.toLocaleTimeString('en-US', { timeZone: 'Asia/Manila' });
+            var dateString = now.toLocaleDateString('en-US', { timeZone: 'Asia/Manila' });
+
+            document.getElementById('time').textContent = timeString;
+            document.getElementById('date').textContent = dateString;
+        }
+
+        setInterval(updateClock, 1000); 
+        updateClock(); 
     });
 
-    if (row.hasChildNodes()) {
-        container.appendChild(row);
-    }
-}
-
-document.addEventListener('DOMContentLoaded', function() {
-    function updateClock() {
-        var now = new Date(); // Use new Date() to generate a new Date object
-        var timeString = now.toLocaleTimeString('en-US', { timeZone: 'Asia/Manila' });
-        var dateString = now.toLocaleDateString('en-US', { timeZone: 'Asia/Manila' });
-
-        document.getElementById('time').textContent = timeString;
-        document.getElementById('date').textContent = dateString;
-    }
-
-    setInterval(updateClock, 1000); // Update the time every second
-    updateClock(); // Initial call to display the time right away
-});
-
-document.addEventListener('DOMContentLoaded', function() {
+    // Modal functionality
+    document.addEventListener('DOMContentLoaded', function() {
         var modal = document.getElementById("projectModal");
         var span = document.getElementsByClassName("close")[0];
 
@@ -145,6 +214,9 @@ document.addEventListener('DOMContentLoaded', function() {
     }
 </script>
 
+{% block extra_js %}
+<!-- Page-specific scripts will be added here -->
+{% endblock %}
 
 </body>
 </html>

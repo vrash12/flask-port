@@ -1,0 +1,121 @@
+{% extends "layout.html" %}
+
+{% block head %}
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/generals_game.css') }}">
+{% endblock %}
+
+{% block content %}
+<div class="dashboard-container">
+    <!-- Sidebar -->
+    <div class="sidebar">
+        <h2>Game Controls</h2>
+        <button onclick="startGame()">Start Game</button>
+        <button onclick="playWithFriend()">Play with Friends</button>
+        <button onclick="resetGame()">Reset Game</button>
+        <h3>Game Log</h3>
+        <div id="game-log"></div>
+    </div>
+
+    <!-- Main Game Section -->
+    <div class="game-main">
+        <h1>Game of the Generals</h1>
+
+        <div id="game-container">
+            <div id="game-board">
+                <!-- Game board: 3x5 grid -->
+                <table>
+                    <tr>
+                        <td id="cell-1" onclick="handleCellClick(1)"></td>
+                        <td id="cell-2" onclick="handleCellClick(2)"></td>
+                        <td id="cell-3" onclick="handleCellClick(3)"></td>
+                        <td id="cell-4" onclick="handleCellClick(4)"></td>
+                        <td id="cell-5" onclick="handleCellClick(5)"></td>
+                    </tr>
+                    <tr>
+                        <td id="cell-6" onclick="handleCellClick(6)"></td>
+                        <td id="cell-7" onclick="handleCellClick(7)"></td>
+                        <td id="cell-8" onclick="handleCellClick(8)"></td>
+                        <td id="cell-9" onclick="handleCellClick(9)"></td>
+                        <td id="cell-10" onclick="handleCellClick(10)"></td>
+                    </tr>
+                    <tr>
+                        <td id="cell-11" onclick="handleCellClick(11)"></td>
+                        <td id="cell-12" onclick="handleCellClick(12)"></td>
+                        <td id="cell-13" onclick="handleCellClick(13)"></td>
+                        <td id="cell-14" onclick="handleCellClick(14)"></td>
+                        <td id="cell-15" onclick="handleCellClick(15)"></td>
+                    </tr>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+{% block extra_js %}
+<script>
+    let pieces = [];
+    let selectedPiece = null;
+    let currentPlayer = "Player 1";  // Used for turn-based play
+
+    async function startGame() {
+        await init();
+        pieces = initialize_pieces();
+        renderBoard();
+        document.getElementById("game-log").textContent = "Game started!";
+    }
+
+    function playWithFriend() {
+        startGame();
+        currentPlayer = "Player 1";  // Reset turn system
+        document.getElementById("game-log").textContent = `Play with Friends started! ${currentPlayer}'s turn`;
+    }
+
+    function renderBoard() {
+        for (let i = 1; i <= 15; i++) {
+            const cell = document.getElementById("cell-" + i);
+            cell.textContent = '';
+            cell.classList.remove('selected');
+        }
+
+        pieces.forEach(piece => {
+            const position = piece.get_position();
+            const name = piece.get_name();
+            document.getElementById("cell-" + position).textContent = name;
+        });
+    }
+
+    function handleCellClick(position) {
+        const piece = pieces.find(p => p.get_position() === position);
+
+        if (piece && !selectedPiece) {
+            selectedPiece = piece;
+            const cell = document.getElementById("cell-" + position);
+            cell.classList.add('selected');
+            document.getElementById("game-log").textContent = `Selected: ${piece.get_name()} (${currentPlayer})`;
+        } else if (selectedPiece) {
+            if (selectedPiece.is_move_valid(position)) {
+                selectedPiece.move_to(position);
+                document.getElementById("game-log").textContent = `${currentPlayer} moved: ${selectedPiece.get_name()} to position ${position}`;
+                selectedPiece = null;
+                togglePlayer();
+                renderBoard();
+            } else {
+                document.getElementById("game-log").textContent = "Invalid move!";
+            }
+        }
+    }
+
+    function togglePlayer() {
+        currentPlayer = currentPlayer === "Player 1" ? "Player 2" : "Player 1";
+        document.getElementById("game-log").textContent += `\nNow it's ${currentPlayer}'s turn`;
+    }
+
+    function resetGame() {
+        startGame();
+        document.getElementById("game-log").textContent = "Game reset!";
+    }
+
+    // Initialize game on page load
+    startGame();
+</script>
+{% endblock %}

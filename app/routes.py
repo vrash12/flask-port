@@ -214,7 +214,13 @@ def init_routes(app):
     def project_detail(id):
         project = Project.query.get_or_404(id)
         return render_template('project_detail.html', project=project)
+    
+    @app.route('/generals')
+    def generals_game():
+        return render_template('generals_game.html')
 
 def allowed_file(filename):
     ALLOWED_EXTENSIONS = {'png', 'jpg', 'jpeg', 'gif'}
     return '.' in filename and filename.rsplit('.', 1)[1].lower() in ALLOWED_EXTENSIONS
+
+
