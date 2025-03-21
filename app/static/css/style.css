@@ -181,7 +181,6 @@ html {
 .wave-container svg path {
     animation: wave 10s infinite linear;
 }
-
 .animated-wave-container {
     margin-top: 200px;
     position: relative;
@@ -193,11 +192,18 @@ html {
     display: block;
     width: 100%;
     height: 100px; /* Adjust height as needed */
+    animation: waveAnimation 10s linear infinite;
 }
 
-.wave-path {
-    animation: waveAnimation 10s infinite linear;
+@keyframes waveAnimation {
+    0% {
+        transform: translateX(0); /* Start from the left */
+    }
+    100% {
+        transform: translateX(-100%); /* Move to the left completely */
+    }
 }
+
 
 
 
